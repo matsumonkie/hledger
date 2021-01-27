@@ -1,4 +1,5 @@
-{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-|
 
 
@@ -9,19 +10,19 @@ account, and subaccounting-excluding and -including balances.
 
 module Hledger.Data.Account
 where
-import Data.List (find, sortOn)
-import Data.List.Extra (groupSort, groupOn)
-import Data.Maybe (fromMaybe)
-import Data.Ord (Down(..))
-import qualified Data.Map as M
-import Safe (headMay, lookupJustDef)
-import Text.Printf
+import           Data.List                (find, sortOn)
+import           Data.List.Extra          (groupOn, groupSort)
+import qualified Data.Map                 as M
+import           Data.Maybe               (fromMaybe)
+import           Data.Ord                 (Down (..))
+import           Safe                     (headMay, lookupJustDef)
+import           Text.Printf
 
-import Hledger.Data.AccountName
-import Hledger.Data.Amount
-import Hledger.Data.Posting ()
-import Hledger.Data.Types
-import Hledger.Utils
+import           Hledger.Data.AccountName
+import           Hledger.Data.Amount
+import           Hledger.Data.Posting     ()
+import           Hledger.Data.Types
+import           Hledger.Utils
 
 
 -- deriving instance Show Account
@@ -32,6 +33,8 @@ instance Show Account where
                        anumpostings
                        (wbUnpack $ showMixedAmountB noColour aebalance)
                        (wbUnpack $ showMixedAmountB noColour aibalance)
+
+
 
 instance Eq Account where
   (==) a b = aname a == aname b -- quick equality test for speed
@@ -99,7 +102,7 @@ tieAccountParents = tie Nothing
 -- | Get this account's parent accounts, from the nearest up to the root.
 parentAccounts :: Account -> [Account]
 parentAccounts Account{aparent=Nothing} = []
-parentAccounts Account{aparent=Just a} = a:parentAccounts a
+parentAccounts Account{aparent=Just a}  = a:parentAccounts a
 
 -- | List the accounts at each level of the account tree.
 accountsLevels :: Account -> [[Account]]
@@ -258,6 +261,8 @@ lookupAccount a = find ((==a).aname)
 
 printAccounts :: Account -> IO ()
 printAccounts = putStrLn . showAccounts
+
+
 
 showAccounts = unlines . map showAccountDebug . flattenAccounts
 
